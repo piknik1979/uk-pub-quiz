@@ -65,7 +65,7 @@ body {
     opacity: 1;
 }
 
-#start-screen, #summary-screen {
+#start-screen, #summary-screen, #leaderboard-screen {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -82,7 +82,7 @@ body {
     margin-bottom: 24px;
 }
 
-#start-screen h1 {
+#start-screen h1, #leaderboard-screen h2, #summary-screen h2 {
     font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 12px;
@@ -241,3 +241,52 @@ body {
 .save-box { width: 100%; margin-bottom: 15px; }
 #nickname-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: white; font-size: 1rem; text-align: center; margin-bottom: 8px; outline: none; }
 .save-status { font-size: 0.85rem; color: var(--accent-gold); margin-top: 5px; }
+
+/* Leaderboard screen styling */
+.leaderboard-list {
+    width: 100%;
+    background-color: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 16px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.leaderboard-rank {
+    color: var(--accent-gold);
+    font-weight: 800;
+    margin-right: 10px;
+}
+
+.leaderboard-name {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.leaderboard-score {
+    background: rgba(243, 156, 18, 0.15);
+    color: var(--accent-gold);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.loading-scores, .no-scores {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 20px;
+}

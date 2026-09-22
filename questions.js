@@ -1,7 +1,7 @@
 const pubQuizQuestions = [
   {
     question:
-      "Jakie jest tradycyjne brytyjskie określenie na piwo ale podawane z beczki w temperaturze piwnicznej?",
+      "What is the traditional British term for cask-conditioned draft ale served at cellar temperature?",
     answers: [
       { text: "A) Stout", correct: false },
       { text: "B) Real Ale", correct: true },
@@ -10,18 +10,18 @@ const pubQuizQuestions = [
     ],
   },
   {
-    question: "Co oznacza brytyjski slangowy zwrot 'Having a chinwag'?",
+    question: "What does the British slang phrase 'Having a chinwag' mean?",
     answers: [
-      { text: "A) Kłócić się o rachunek", correct: false },
-      { text: "B) Pić piwo jednym tchem", correct: false },
-      { text: "C) Prowadzić pogawędkę, plotkować", correct: true },
-      { text: "D) Zasnąć w fotelu pubowym", correct: false },
+      { text: "A) Arguing over the bar bill", correct: false },
+      { text: "B) Chugging a pint in one breath", correct: false },
+      { text: "C) Having a chat / gossiping", correct: true },
+      { text: "D) Falling asleep in a pub armchair", correct: false },
     ],
   },
   {
-    question: "Które miasto jest stolicą Walii?",
+    question: "Which city is the capital of Wales?",
     answers: [
-      { text: "A) Edynburg", correct: false },
+      { text: "A) Edinburgh", correct: false },
       { text: "B) Belfast", correct: false },
       { text: "C) Cardiff", correct: true },
       { text: "D) Manchester", correct: false },
@@ -29,7 +29,7 @@ const pubQuizQuestions = [
   },
   {
     question:
-      "Jak nazywa się kultowy londyński pub, w którym według legendy spotykali się spiskowcy Prochu Strzelniczego?",
+      "What is the name of the iconic London pub where the Gunpowder Plot conspirators allegedly met?",
     answers: [
       { text: "A) The Lamb & Flag", correct: true },
       { text: "B) The Crown & Sceptre", correct: false },
@@ -38,17 +38,17 @@ const pubQuizQuestions = [
     ],
   },
   {
-    question: "Co oznacza brytyjskie słowo 'Bloke'?",
+    question: "What does the common British word 'Bloke' mean?",
     answers: [
-      { text: "A) Facet / gość", correct: true },
-      { text: "B) Pies domowy", correct: false },
-      { text: "C) Portfel", correct: false },
-      { text: "D) Kawałek ciasta", correct: false },
+      { text: "A) A man / guy", correct: true },
+      { text: "B) A domestic dog", correct: false },
+      { text: "C) A wallet", correct: false },
+      { text: "D) A slice of cake", correct: false },
     ],
   },
   {
     question:
-      "W którym roku odbyło się oficjalne otwarcie kultowego London Eye?",
+      "In which year did the iconic London Eye officially open to the public?",
     answers: [
       { text: "A) 1995", correct: false },
       { text: "B) 2000", correct: true },
@@ -58,7 +58,7 @@ const pubQuizQuestions = [
   },
   {
     question:
-      "Jakie danie jest powszechnie uznawane za nieoficjalne danie narodowe Wielkiej Brytanii w pubach?",
+      "Which dish is widely considered Britain's unofficial national pub dish?",
     answers: [
       { text: "A) Chicken Tikka Masala", correct: true },
       { text: "B) Beef Wellington", correct: false },
@@ -67,34 +67,34 @@ const pubQuizQuestions = [
     ],
   },
   {
-    question: "Co oznacza popularny brytyjski slang 'Quid'?",
+    question: "What does the popular British slang term 'Quid' refer to?",
     answers: [
-      { text: "A) Funt brytyjski (waluta)", correct: true },
-      { text: "B) Szybka przekąska", correct: false },
-      { text: "C) Kolejka w barze", correct: false },
-      { text: "D) Parasol", correct: false },
+      { text: "A) British Pound (currency)", correct: true },
+      { text: "B) A quick snack", correct: false },
+      { text: "C) A round of drinks", correct: false },
+      { text: "D) An umbrella", correct: false },
     ],
   },
   {
     question:
-      "Który brytyjski monarcha panował najdłużej przed Królową Elżbietą II?",
+      "Which British monarch reigned the longest before Queen Elizabeth II?",
     answers: [
-      { text: "A) Król Henryk VIII", correct: false },
-      { text: "B) Królowa Wiktoria", correct: true },
-      { text: "C) Król Jerzy III", correct: false },
-      { text: "D) Królowa Elżbieta I", correct: false },
+      { text: "A) King Henry VIII", correct: false },
+      { text: "B) Queen Victoria", correct: true },
+      { text: "C) King George III", correct: false },
+      { text: "D) Queen Elizabeth I", correct: false },
     ],
   },
   {
-    question: "Co robisz, gdy w pubie słyszysz okrzyk 'Last orders!'?",
+    question: "What do you do when you hear the call 'Last orders!' in a pub?",
     answers: [
-      { text: "A) Zamawiasz ostatnią szansę na darmowe piwo", correct: false },
+      { text: "A) Ask for a free round of drinks", correct: false },
       {
-        text: "B) Składasz ostatnie zamówienie przed zamknięciem baru",
+        text: "B) Place your final drink order before the bar closes",
         correct: true,
       },
-      { text: "C) Wychodzisz natychmiast na zewnątrz", correct: false },
-      { text: "D) Płacisz rachunek za cały stolik", correct: false },
+      { text: "C) Leave the premises immediately", correct: false },
+      { text: "D) Pay the bill for the entire table", correct: false },
     ],
   },
 ];

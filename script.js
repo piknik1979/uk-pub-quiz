@@ -1,22 +1,27 @@
-// Inicjalizacja Supabase przy użyciu danych z pliku config.js
+// Initialize Supabase client using configuration from config.js
 const _supabase = supabase.createClient(
   CONFIG.SUPABASE_URL,
   CONFIG.SUPABASE_KEY,
 );
 
-// Stan gry
+// Game state
 let currentQuestionIndex = 0;
 let score = 0;
 let timer = null;
 let timeLeft = CONFIG.QUESTION_TIME;
 
-// Elementy DOM
+// DOM Elements
 const startScreen = document.getElementById("start-screen");
 const quizScreen = document.getElementById("quiz-screen");
 const summaryScreen = document.getElementById("summary-screen");
+const leaderboardScreen = document.getElementById("leaderboard-screen");
 
 const startBtn = document.getElementById("start-btn");
+const leaderboardBtn = document.getElementById("leaderboard-btn");
 const restartBtn = document.getElementById("restart-btn");
+const homeBtnSummary = document.getElementById("home-btn-summary");
+const backToMenuBtn = document.getElementById("back-to-menu-btn");
+const quitBtn = document.getElementById("quit-btn");
 
 const questionNumberEl = document.getElementById("question-number");
 const scoreCounterEl = document.getElementById("score-counter");
@@ -32,10 +37,34 @@ const nicknameInput = document.getElementById("nickname-input");
 const saveScoreBtn = document.getElementById("save-score-btn");
 const saveStatusEl = document.getElementById("save-status");
 const saveScoreContainer = document.getElementById("save-score-container");
+const leaderboardListEl = document.getElementById("leaderboard-list");
 
+// Event Listeners
 startBtn.addEventListener("click", startQuiz);
 restartBtn.addEventListener("click", startQuiz);
+leaderboardBtn.addEventListener("click", showLeaderboard);
+backToMenuBtn.addEventListener("click", showMainMenu);
+homeBtnSummary.addEventListener("click", showMainMenu);
+quitBtn.addEventListener("click", quitToMenu);
 saveScoreBtn.addEventListener("click", saveScoreToSupabase);
+
+function switchScreen(fromScreen, toScreen) {
+  fromScreen.classList.remove("active");
+  toScreen.classList.add("active");
+}
+
+function showMainMenu() {
+  resetTimer();
+  const activeScreen = document.querySelector(".screen.active");
+  switchScreen(activeScreen, startScreen);
+}
+
+function quitToMenu() {
+  if (confirm("Are you sure you want to quit the quiz?")) {
+    resetTimer();
+    switchScreen(quizScreen, startScreen);
+  }
+}
 
 function startQuiz() {
   currentQuestionIndex = 0;
@@ -48,13 +77,9 @@ function startQuiz() {
   saveScoreContainer.style.display = "block";
   saveStatusEl.textContent = "";
 
-  switchScreen(startScreen, quizScreen);
+  const activeScreen = document.querySelector(".screen.active");
+  switchScreen(activeScreen, quizScreen);
   loadQuestion();
-}
-
-function switchScreen(fromScreen, toScreen) {
-  fromScreen.classList.remove("active");
-  toScreen.classList.add("active");
 }
 
 function loadQuestion() {
@@ -156,41 +181,92 @@ function endQuiz() {
 
   if (score === pubQuizQuestions.length) {
     summaryMessageEl.textContent =
-      "Brilliant! Pełen sukces, zasługujesz na pintę ale!";
+      "Brilliant! Full success, you deserve a pint of ale!";
   } else if (score >= 7) {
     summaryMessageEl.textContent =
-      "Dobra robota, mate! Znasz Wyspy Brytyjskie bardzo dobrze.";
+      "Good job, mate! You know the British Isles very well.";
   } else if (score >= 4) {
     summaryMessageEl.textContent =
-      "Nieźle, ale przydałoby się jeszcze trochę wizyt w pubie!";
+      "Not bad, but could use a few more pub visits!";
   } else {
     summaryMessageEl.textContent =
-      "Oj, cienko! Czas odświeżyć wiedzę o brytyjskiej kulturze.";
+      "Oof! Time to brush up on your British culture.";
   }
 }
 
 async function saveScoreToSupabase() {
   const nickname = nicknameInput.value.trim();
   if (!nickname) {
-    saveStatusEl.textContent = "Wpisz swój nick przed zapisaniem!";
+    saveStatusEl.textContent = "Please enter your nickname first!";
     return;
   }
 
   saveScoreBtn.disabled = true;
   nicknameInput.disabled = true;
-  saveStatusEl.textContent = "Zapisywanie wyniku...";
+  saveStatusEl.textContent = "Saving score...";
 
-  // Zapis z wykorzystaniem nazwy tabeli z config.js
   const { error } = await _supabase
     .from(CONFIG.SUPABASE_TABLE)
     .insert([{ nickname: nickname, score: score }]);
 
   if (error) {
-    console.error("Błąd Supabase:", error);
-    saveStatusEl.textContent = "Błąd zapisu! Spróbuj ponownie.";
+    console.error("Supabase error:", error);
+    saveStatusEl.textContent = "Save failed! Try again.";
     saveScoreBtn.disabled = false;
     nicknameInput.disabled = false;
   } else {
-    saveStatusEl.textContent = "Sukces! Wynik zapisany w bazie.";
+    saveStatusEl.textContent = "Success! Score saved to leaderboard.";
   }
+}
+
+async function showLeaderboard() {
+  const activeScreen = document.querySelector(".screen.active");
+  switchScreen(activeScreen, leaderboardScreen);
+
+  leaderboardListEl.innerHTML =
+    '<p class="loading-scores">Loading scores...</p>';
+
+  const { data, error } = await _supabase
+    .from(CONFIG.SUPABASE_TABLE)
+    .select("nickname, score, created_at")
+    .order("score", { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.error("Error fetching leaderboard:", error);
+    leaderboardListEl.innerHTML =
+      '<p class="no-scores">Failed to load leaderboard.</p>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    leaderboardListEl.innerHTML =
+      '<p class="no-scores">No scores recorded yet. Be the first!</p>';
+    return;
+  }
+
+  leaderboardListEl.innerHTML = "";
+  data.forEach((row, index) => {
+    const item = document.createElement("div");
+    item.classList.add("leaderboard-item");
+    item.innerHTML = `
+            <span class="leaderboard-rank">#${index + 1}</span>
+            <span class="leaderboard-name">${escapeHtml(row.nickname)}</span>
+            <span class="leaderboard-score">${row.score} / ${pubQuizQuestions.length}</span>
+        `;
+    leaderboardListEl.appendChild(item);
+  });
+}
+
+function escapeHtml(text) {
+  const map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
 }
