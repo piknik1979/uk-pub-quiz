@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UK Pub Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Ekran Startowy -->
+        <section id="start-screen" class="screen active">
+            <div class="pub-badge">🍺 UK Pub Quiz 🇬🇧</div>
+            <h1>Test your British Wit!</h1>
+            <p class="subtitle">Historia, popkultura, brytyjski slang i tradycje pubowe w jednym quizie.</p>
+            <button id="start-btn" class="btn primary-btn">Rozpocznij Quiz</button>
+        </section>
+
+        <!-- Ekran Pytań / Gry -->
+        <section id="quiz-screen" class="screen">
+            <header class="quiz-header">
+                <div class="stat-box">
+                    <span class="label">Pytanie</span>
+                    <span id="question-number">1/10</span>
+                </div>
+                <div class="timer-box" id="timer-box">
+                    <span id="timer">15</span>s
+                </div>
+                <div class="stat-box">
+                    <span class="label">Punkty</span>
+                    <span id="score-counter">0</span>
+                </div>
+            </header>
+
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div class="question-card">
+                <h2 id="question-text">Ładowanie pytania...</h2>
+            </div>
+
+            <div class="answers-grid" id="answers-container">
+                <!-- Generowane przez JS -->
+            </div>
+        </section>
+
+        <!-- Ekran Końcowy / Podsumowanie -->
+        <section id="summary-screen" class="screen">
+            <div class="trophy-icon">🏆</div>
+            <h2>Koniec Pub Quizu!</h2>
+            <p class="summary-text" id="summary-message">Dobra robota, mate!</p>
+            
+            <div class="score-card">
+                <span class="score-label">Twój ostateczny wynik</span>
+                <span id="final-score" class="final-score-value">0 / 10</span>
+            </div>
+
+            <div id="save-score-container" class="save-box">
+                <input type="text" id="nickname-input" placeholder="Wpisz swój nick..." maxlength="15">
+                <button id="save-score-btn" class="btn secondary-btn">Zapisz wynik</button>
+                <p id="save-status" class="save-status"></p>
+            </div>
+
+            <button id="restart-btn" class="btn primary-btn">Zagraj Ponownie</button>
+        </section>
+    </div>
+
+    <!-- Skrypty (kolejność ma znaczenie!) -->
+    <script src="config.js"></script>
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
