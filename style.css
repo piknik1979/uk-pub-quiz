@@ -11,6 +11,18 @@
     --uk-blue: #1d3557;
 }
 
+/* Miękki, ciepły tryb dzienny (Warm Paper / Cream - nie oślepia) */
+body.light-mode {
+    --bg-primary: #f8f6f0;
+    --bg-secondary: #ffffff;
+    --bg-card: #eeeae0;
+    --accent-gold: #b45309;
+    --accent-gold-hover: #92400e;
+    --text-main: #2d2a26;
+    --text-muted: #78716c;
+    --uk-blue: #2563eb;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -28,6 +40,10 @@ body {
     align-items: center;
     min-height: 100dvh;
     overflow: hidden;
+}
+
+body.light-mode {
+    background-color: #e3ded4;
 }
 
 .app-container {
@@ -54,7 +70,6 @@ body {
     display: none;
     flex-direction: column;
     height: 100%;
-    /* Zwiększony dolny margines, żeby przyciski nie nachodziły na pasek systemowy telefonu */
     padding: 20px 20px calc(35px + env(safe-area-inset-bottom)) 20px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
@@ -70,6 +85,10 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+#start-screen {
+    position: relative;
 }
 
 .pub-badge {
@@ -113,7 +132,7 @@ body {
 
 .primary-btn {
     background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-hover));
-    color: #121417;
+    color: #ffffff;
     margin-top: 10px;
 }
 
@@ -210,7 +229,7 @@ body {
 .answer-btn {
     background-color: var(--bg-card);
     color: var(--text-main);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,0,0,0.08);
     padding: 14px 16px;
     border-radius: 12px;
     text-align: left;
@@ -223,10 +242,12 @@ body {
 
 .answer-btn.correct {
     background-color: var(--correct-color) !important;
+    color: #fff !important;
 }
 
 .answer-btn.incorrect {
     background-color: var(--incorrect-color) !important;
+    color: #fff !important;
 }
 
 .answer-btn:disabled {
@@ -242,7 +263,7 @@ body {
 .final-score-value { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); }
 
 .save-box { width: 100%; margin-bottom: 12px; }
-#nickname-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: white; font-size: 1rem; text-align: center; margin-bottom: 6px; outline: none; }
+#nickname-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-secondary); color: var(--text-main); font-size: 1rem; text-align: center; margin-bottom: 6px; outline: none; }
 .save-status { font-size: 0.8rem; color: var(--accent-gold); margin-top: 4px; }
 
 /* Leaderboard screen styling */
@@ -287,7 +308,7 @@ body {
 }
 
 .leaderboard-score {
-    background: rgba(243, 156, 18, 0.15);
+    background: rgba(180, 83, 9, 0.15);
     color: var(--accent-gold);
     padding: 4px 8px;
     border-radius: 6px;

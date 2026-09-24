@@ -39,6 +39,24 @@ const saveStatusEl = document.getElementById("save-status");
 const saveScoreContainer = document.getElementById("save-score-container");
 const leaderboardListEl = document.getElementById("leaderboard-list");
 
+// Theme Toggle Elements & Logic
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const savedTheme = localStorage.getItem('pub_quiz_theme');
+
+if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if (themeToggleBtn) themeToggleBtn.textContent = '☀️';
+}
+
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        themeToggleBtn.textContent = isLight ? '☀️' : '🌙';
+        localStorage.setItem('pub_quiz_theme', isLight ? 'light' : 'dark');
+    });
+}
+
 // Event Listeners
 startBtn.addEventListener("click", startQuiz);
 restartBtn.addEventListener("click", startQuiz);
