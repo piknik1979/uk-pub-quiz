@@ -96,7 +96,6 @@ body {
     gap: 10px;
 }
 
-/* Powiększone przyciski wyboru poziomu trudności */
 .diff-btn {
     padding: 14px;
     border-radius: 12px;
@@ -115,7 +114,6 @@ body {
     border-color: var(--primary);
 }
 
-/* Powiększone główne przyciski (Start, Leaderboard itp.) */
 .primary-btn, .secondary-btn {
     width: 100%;
     padding: 15px;
@@ -215,7 +213,6 @@ body {
     gap: 12px;
 }
 
-/* Powiększone przyciski odpowiedzi (wyższe i wygodniejsze do kliknięcia palcem) */
 .answer-btn {
     padding: 16px;
     border-radius: 12px;
@@ -262,21 +259,21 @@ body {
     font-size: 1rem;
 }
 
-/* Przyciski filtrów rankingu */
+/* Powiększone, wygodniejsze przyciski filtrów w rankingu */
 .filter-buttons {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     justify-content: space-between;
 }
 
 .filter-btn {
     flex: 1;
-    padding: 8px 2px;
-    border-radius: 8px;
+    padding: 10px 4px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
     background: transparent;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
