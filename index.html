@@ -1,97 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UK Pub Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>British Pub Quiz</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Supabase CDN -->
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Start Screen -->
-        <section id="start-screen" class="screen active">
-            <button id="theme-toggle-btn" class="theme-btn" title="Toggle Theme">🌙</button>
-            <div class="pub-badge">🇬🇧 UK Pub Quiz 🍻</div>
-            <h1>Test your British Wit!</h1>
-            <p class="subtitle">History, pop culture, British slang, and traditional pub lore in one quiz.</p>
-            <button id="start-btn" class="btn primary-btn">Start Quiz</button>
-            <button id="leaderboard-btn" class="btn secondary-btn">Leaderboard</button>
-        </section>
+    <div class="quiz-container">
+        <!-- Górny pasek z motywem -->
+        <header class="quiz-header">
+            <h1 class="logo">🍻 Pub Quiz</h1>
+            <button id="theme-toggle" class="theme-btn" title="Toggle Theme">🌙</button>
+        </header>
 
-        <!-- Quiz Screen -->
-        <section id="quiz-screen" class="screen">
-            <header class="quiz-header">
-                <div class="stat-box">
-                    <span class="label">Question</span>
-                    <span id="question-number">1/10</span>
+        <!-- EKRAN STARTOWY -->
+        <div id="start-screen" class="screen active">
+            <div class="welcome-box">
+                <h2>Welcome to the British Pub!</h2>
+                <p>Test your knowledge about the UK, culture, history, and slang.</p>
+                
+                <div class="difficulty-selector">
+                    <p>Select Difficulty:</p>
+                    <div class="diff-buttons">
+                        <button class="diff-btn active" data-diff="mix">Mix 🎲</button>
+                        <button class="diff-btn" data-diff="easy">Easy 🍺</button>
+                        <button class="diff-btn" data-diff="medium">Medium 🍻</button>
+                        <button class="diff-btn" data-diff="hard">Hard 🍻🔥</button>
+                    </div>
                 </div>
-                <div class="timer-box" id="timer-box">
-                    <span id="timer">15</span>s
+
+                <button id="start-btn" class="primary-btn">Start Quiz 🚀</button>
+                <button id="leaderboard-btn" class="secondary-btn">Leaderboard 🏆</button>
+            </div>
+        </div>
+
+        <!-- EKRAN QUIZU -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-info-bar">
+                <span id="question-counter">Question 1/10</span>
+                <span id="score-counter">0</span>
+            </div>
+
+            <div class="quiz-meta">
+                <span id="category-tag" class="category-tag">🗺️ Category</span>
+                <span id="beer-difficulty" class="beer-difficulty easy">🍺 Easy</span>
+            </div>
+
+            <div class="timer-container">
+                <div id="timer-bar" class="timer-bar"></div>
+            </div>
+            <div class="timer-text"><span id="timer">15s</span></div>
+
+            <div class="question-box">
+                <h3 id="question-text">Treść pytania pojawi się tutaj...</h3>
+            </div>
+
+            <div id="answers-container" class="answers-grid">
+                <!-- Odpowiedzi generowane dynamicznie -->
+            </div>
+        </div>
+
+        <!-- EKRAN WYNIKÓW -->
+        <div id="result-screen" class="screen">
+            <div class="result-box">
+                <h2>Quiz Completed! 🍻</h2>
+                <p id="final-score-text">Your Final Score: 0</p>
+                <p id="bonus-info-text">Great job!</p>
+
+                <div class="save-score-section">
+                    <input type="text" id="player-nickname" placeholder="Enter your nickname..." maxlength="15">
+                    <button id="save-score-btn" class="primary-btn">Save Score 💾</button>
                 </div>
-                <div class="stat-box">
-                    <span class="label">Score</span>
-                    <span id="score-counter">0</span>
-                </div>
-            </header>
 
-            <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
+                <button id="restart-btn" class="secondary-btn">Play Again 🔄</button>
             </div>
+        </div>
 
-            <div class="question-card">
-                <h2 id="question-text">Loading question...</h2>
-            </div>
-
-            <div class="answers-grid" id="answers-container">
-                <!-- Generated by JS -->
-            </div>
+        <!-- EKRAN RANKINGU (LEADERBOARD) -->
+        <div id="leaderboard-screen" class="screen">
+            <h2>🏆 Pub Champions</h2>
             
-            <button id="quit-btn" class="btn text-btn" style="margin-top: 15px; background: transparent; color: var(--text-muted); border: none;">Quit to Menu</button>
-        </section>
-
-        <!-- Summary Screen -->
-        <section id="summary-screen" class="screen">
-            <div class="trophy-icon">🏆</div>
-            <h2>Quiz Complete!</h2>
-            <p class="summary-text" id="summary-message">Well played, mate!</p>
-            
-            <div class="score-card">
-                <span class="score-label">Your Final Score</span>
-                <span id="final-score" class="final-score-value">0 / 10</span>
+            <!-- Przyciski filtrowania -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="mix">Mix</button>
+                <button class="filter-btn" data-filter="easy">Easy</button>
+                <button class="filter-btn" data-filter="medium">Med</button>
+                <button class="filter-btn" data-filter="hard">Hard</button>
             </div>
 
-            <div id="save-score-container" class="save-box">
-                <input type="text" id="nickname-input" placeholder="Enter your nickname..." maxlength="15">
-                <button id="save-score-btn" class="btn secondary-btn">Save Score</button>
-                <p id="save-status" class="save-status"></p>
-            </div>
-
-            <button id="restart-btn" class="btn primary-btn">Play Again</button>
-            <button id="home-btn-summary" class="btn secondary-btn">Main Menu</button>
-        </section>
-
-        <!-- Leaderboard Screen -->
-        <section id="leaderboard-screen" class="screen">
-            <h2>🏆 Leaderboard</h2>
-            <p class="subtitle" style="margin-bottom: 16px;">Top pub trivia champions</p>
-            
             <div id="leaderboard-list" class="leaderboard-list">
-                <p class="loading-scores">Loading scores...</p>
+                <p class="loading-text">Loading scores...</p>
             </div>
+            <button id="back-to-start-btn" class="secondary-btn">Back to Menu 🏠</button>
+        </div>
 
-            <button id="back-to-menu-btn" class="btn primary-btn" style="margin-top: auto;">Back to Menu</button>
-        </section>
+        <!-- DOLNY PASEK NAWIGACYJNY -->
+        <nav class="bottom-nav">
+            <button class="nav-btn" id="nav-home" title="Home">
+                🏠
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" id="nav-leaderboard" title="Leaderboard">
+                🏆
+                <span>Ranking</span>
+            </button>
+        </nav>
     </div>
 
-    <!-- Scripts -->
-    <script src="config.js"></script>
-    <script src="questions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
