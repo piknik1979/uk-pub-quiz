@@ -39,27 +39,28 @@ body {
     justify-content: center;
     align-items: stretch;
     min-height: 100vh;
+    padding-bottom: 70px; /* Miejsce na dolny pasek nawigacyjny */
 }
 
-/* Kontener główny - na telefonach wypełnia ekran i centruje zawartość w pionie */
+/* Kontener główny - menu startowe lekko wyżej niż środek (na wysokości wzroku) */
 .quiz-container, .app-container {
     width: 100%;
     max-width: 100%;
     min-height: 100vh;
     background: var(--bg-color);
     border-radius: 0;
-    padding: 24px 20px;
+    padding: 24px 20px 80px 20px;
     box-shadow: none;
     border: none;
     margin: 0;
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Zapobiega uciekaniu elementów w dół */
     align-items: stretch;
 }
 
-/* Na większych ekranach (komputery) zostaje ładne, wycentrowane okienko */
+/* Na większych ekranach (komputery) */
 @media (min-width: 768px) {
     body {
         align-items: center;
@@ -74,7 +75,6 @@ body {
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         border: 1px solid var(--border-color);
         margin: 10px;
-        justify-content: flex-start;
     }
 }
 
@@ -98,24 +98,29 @@ body {
     cursor: pointer;
 }
 
-/* Ekrany aplikacji wycentrowane w pionie */
+/* Ekrani aplikacyjne */
 .screen {
     display: none;
     flex-direction: column;
     gap: 16px;
     flex: 1;
-    justify-content: center;
 }
 
 .screen.active {
     display: flex;
 }
 
-.welcome-box, .result-box {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+/* Ekran startowy - delikatnie podciągnięty wyżej (w okolice wzroku) */
+#start-screen.active, .welcome-box {
+    justify-content: center;
+    padding-bottom: 40px;
+    flex: 1;
+}
+
+/* Ekran rankingu – sztywna struktura, żeby nic nie skakało przy zmianie trudności */
+#leaderboard-screen.active {
+    justify-content: flex-start;
+    gap: 14px;
 }
 
 .difficulty-selector p {
@@ -297,6 +302,7 @@ body {
     display: flex;
     gap: 6px;
     justify-content: space-between;
+    flex-shrink: 0; /* Zapewnia, że przyciski filtrów nigdy się nie ściskają */
 }
 
 .filter-btn {
@@ -318,13 +324,16 @@ body {
     border-color: var(--primary);
 }
 
+/* Lista wyników ze stałą wysokością i niezależnym scrollowaniem – koniec ze skakaniem układu! */
 .leaderboard-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    max-height: 380px; 
+    height: 420px; 
+    max-height: 50vh;
     overflow-y: auto;
     padding-right: 2px;
+    flex-shrink: 0;
 }
 
 .leaderboard-item {
@@ -342,6 +351,7 @@ body {
     text-align: center;
     color: var(--text-muted);
     font-size: 0.9rem;
+    padding: 20px;
 }
 
 .lb-details {
