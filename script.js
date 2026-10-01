@@ -162,7 +162,7 @@ function nextQuestion() {
   // Wyświetlanie kategorii i trudności pytania
   const categoryTag = document.getElementById('category-tag');
   const beerDifficulty = document.getElementById('beer-difficulty');
-  if (categoryTag) categoryTag.textContent = q.category ? `🗺️️ ${q.category}` : '🗺️ General';
+  if (categoryTag) categoryTag.textContent = q.category ? `🗺 ${q.category}` : '🗺️ General';
   if (beerDifficulty) {
       const diffVal = q.difficulty ? q.difficulty.toLowerCase() : 'easy';
       beerDifficulty.className = `beer-difficulty ${diffVal}`;
@@ -291,13 +291,15 @@ if (saveScoreBtn) {
       saveScoreBtn.textContent = 'Saving...';
 
       try {
-          // Zapisujemy w tabeli wyników (pub_quiz_scores)
+          // Zapisujemy w tabeli wyników uwzględniając nickname, score, difficulty ORAZ device_id
           const { error } = await supabaseClient
               .from(CONFIG.SUPABASE_SCORES_TABLE)
               .insert([
                   {
                       nickname: nickname,
-                      score: score
+                      score: score,
+                      difficulty: selectedDifficulty,
+                      device_id: deviceId
                   }
               ]);
 
@@ -307,7 +309,7 @@ if (saveScoreBtn) {
           showScreen(leaderboardScreen);
       } catch (err) {
           console.error('Error saving score:', err);
-          alert('Failed to save score.');
+          alert('Failed to save score: ' + (err.message || 'Unknown error'));
       } finally {
           saveScoreBtn.disabled = false;
           saveScoreBtn.textContent = 'Save Score 💾';
@@ -357,6 +359,11 @@ async function loadLeaderboard(filter = 'all') {
           .order('score', { ascending: false })
           .limit(10);
 
+      // Filtrowanie po wybranym poziomie trudności
+      if (filter && filter !== 'all') {
+          query = query.eq('difficulty', filter);
+      }
+
       const { data, error } = await query;
       if (error) throw error;
 
@@ -369,9 +376,10 @@ async function loadLeaderboard(filter = 'all') {
       data.forEach((entry, index) => {
           const item = document.createElement('div');
           item.classList.add('leaderboard-item');
+          const diff = entry.difficulty ? entry.difficulty.toUpperCase() : 'MIX';
           
           item.innerHTML = `
-              <span>#${index + 1} <strong>${escapeHtml(entry.nickname)}</strong></span>
+              <span>#${index + 1} <strong>${escapeHtml(entry.nickname)}</strong> <span class="lb-badge ${entry.difficulty || 'mix'}">${diff}</span></span>
               <span style="text-align: right;"><strong class="lb-pts">${entry.score} pts</strong></span>
           `;
           leaderboardList.appendChild(item);
