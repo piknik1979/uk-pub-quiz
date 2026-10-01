@@ -103,7 +103,6 @@ if (startBtn) {
       startBtn.textContent = 'Loading questions... 🍻';
 
       try {
-          // Pobieramy z tabeli pytań (pub_quiz_questions)
           let query = supabaseClient.from(CONFIG.SUPABASE_TABLE).select('*');
           
           if (selectedDifficulty !== 'mix') {
@@ -114,7 +113,7 @@ if (startBtn) {
           if (error) throw error;
 
           if (!data || data.length === 0) {
-              alert('No questions found for this difficulty in the database!');
+              console.warn('No questions found for this difficulty in the database!');
               startBtn.disabled = false;
               startBtn.textContent = 'Start Quiz 🚀';
               return;
@@ -135,7 +134,6 @@ if (startBtn) {
           nextQuestion();
       } catch (err) {
           console.error('Error fetching questions:', err);
-          alert('Failed to load questions from database.');
       } finally {
           startBtn.disabled = false;
           startBtn.textContent = 'Start Quiz 🚀';
@@ -159,7 +157,6 @@ function nextQuestion() {
   if (scoreDisplay) scoreDisplay.textContent = score;
   if (questionText) questionText.textContent = q.question;
 
-  // Wyświetlanie kategorii i trudności pytania
   const categoryTag = document.getElementById('category-tag');
   const beerDifficulty = document.getElementById('beer-difficulty');
   if (categoryTag) categoryTag.textContent = q.category ? `🗺 ${q.category}` : '🗺️ General';
@@ -172,7 +169,6 @@ function nextQuestion() {
   if (answersContainer) {
     answersContainer.innerHTML = '';
     
-    // Zabezpieczenie: konwertuj na tablicę, jeśli dane przyszły w innej formie
     let options = q.options;
     if (typeof options === 'string') {
         try {
@@ -283,7 +279,7 @@ function endQuiz() {
   if (bonusInfoText) bonusInfoText.textContent = bonusText;
 }
 
-// --- ZAPIS WYNIKU DO SUPABASE ---
+// --- ZAPIS WYNIKU DO SUPABASE (BEZ POP-UPU) ---
 if (saveScoreBtn) {
   saveScoreBtn.addEventListener('click', async () => {
       const nickname = (playerNickname ? playerNickname.value.trim() : '') || 'Anonymous';
@@ -291,7 +287,6 @@ if (saveScoreBtn) {
       saveScoreBtn.textContent = 'Saving...';
 
       try {
-          // Zapisujemy w tabeli wyników uwzględniając nickname, score, difficulty ORAZ device_id
           const { error } = await supabaseClient
               .from(CONFIG.SUPABASE_SCORES_TABLE)
               .insert([
@@ -304,12 +299,12 @@ if (saveScoreBtn) {
               ]);
 
           if (error) throw error;
-          alert('Score saved successfully!');
+          
+          // Bezpośrednie przejście do rankingu bez alertu
           loadLeaderboard('all');
           showScreen(leaderboardScreen);
       } catch (err) {
           console.error('Error saving score:', err);
-          alert('Failed to save score: ' + (err.message || 'Unknown error'));
       } finally {
           saveScoreBtn.disabled = false;
           saveScoreBtn.textContent = 'Save Score 💾';
@@ -337,7 +332,6 @@ if (restartBtn) {
   });
 }
 
-// Obsługa przycisków filtrowania w rankingu
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
       filterButtons.forEach(b => b.classList.remove('active'));
@@ -352,14 +346,12 @@ async function loadLeaderboard(filter = 'all') {
   leaderboardList.innerHTML = '<p class="loading-text">Loading scores...</p>';
 
   try {
-      // Pobieramy ranking z tabeli wyników (pub_quiz_scores)
       let query = supabaseClient
           .from(CONFIG.SUPABASE_SCORES_TABLE)
           .select('*')
           .order('score', { ascending: false })
           .limit(10);
 
-      // Filtrowanie po wybranym poziomie trudności
       if (filter && filter !== 'all') {
           query = query.eq('difficulty', filter);
       }
