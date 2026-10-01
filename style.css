@@ -41,24 +41,25 @@ body {
     min-height: 100vh;
 }
 
-/* Na telefonie (PWA) kontener zlewa się całkowicie z tłem, bez ramek i marginesów */
+/* Kontener główny - na telefonach wypełnia ekran i centruje zawartość w pionie */
 .quiz-container, .app-container {
     width: 100%;
     max-width: 100%;
     min-height: 100vh;
     background: var(--bg-color);
     border-radius: 0;
-    padding: 20px;
+    padding: 24px 20px;
     box-shadow: none;
     border: none;
     margin: 0;
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: stretch;
 }
 
-/* Na większych ekranach (komputery) przywracamy eleganckie okienko w ramce */
+/* Na większych ekranach (komputery) zostaje ładne, wycentrowane okienko */
 @media (min-width: 768px) {
     body {
         align-items: center;
@@ -69,10 +70,11 @@ body {
         min-height: auto;
         background: var(--card-bg);
         border-radius: 20px;
-        padding: 20px;
+        padding: 24px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         border: 1px solid var(--border-color);
         margin: 10px;
+        justify-content: flex-start;
     }
 }
 
@@ -80,7 +82,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .logo {
@@ -96,11 +98,13 @@ body {
     cursor: pointer;
 }
 
+/* Ekrany aplikacji wycentrowane w pionie */
 .screen {
     display: none;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     flex: 1;
+    justify-content: center;
 }
 
 .screen.active {
@@ -111,7 +115,7 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
 }
 
 .difficulty-selector p {
@@ -395,7 +399,7 @@ body {
     border: 1px solid rgba(156, 163, 175, 0.3);
 }
 
-/* Dolny pasek nawigacyjny - całkowicie zlicowany z tłem telefonu */
+/* Dolny pasek nawigacyjny */
 .bottom-nav {
     display: flex;
     justify-content: space-around;
