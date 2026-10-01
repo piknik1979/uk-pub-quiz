@@ -42,7 +42,6 @@ body {
     padding-bottom: 70px;
 }
 
-/* Kontener główny */
 .quiz-container, .app-container {
     width: 100%;
     max-width: 100%;
@@ -108,15 +107,15 @@ body {
     display: flex;
 }
 
-/* Ekran startowy - ustawiony na ok. 3/4 wysokości i z większym odstępem od nagłówka */
-#start-screen.active, .welcome-box {
+/* Ekran startowy - na 3/4 wysokości z odpowiednimi odstępami */
+#start-screen.active, #menu-screen.active, .welcome-box {
     justify-content: flex-start;
-    padding-top: 10vh; /* Zsuwamy niżej, na ok. 3/4 wysokości ekranu */
-    gap: 24px; /* Większe odstępy między napisami i przyciskami w menu */
+    padding-top: 10vh;
+    gap: 24px;
     flex: 1;
 }
 
-/* Ekran podsumowania (wyników) - również na 3/4 wysokości z dużymi odstępami */
+/* Ekran podsumowania - na 3/4 wysokości z dużymi odstępami, bez zbędnych tekstów */
 #summary-screen.active, #result-screen.active, .result-box {
     justify-content: flex-start;
     padding-top: 12vh;
@@ -133,7 +132,7 @@ body {
 .difficulty-selector {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Większy odstęp między napisem Select Difficulty a przyciskami */
+    gap: 12px;
 }
 
 .difficulty-selector p {
@@ -196,7 +195,6 @@ body {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* Ekran quizu */
 .quiz-info-bar {
     display: flex;
     justify-content: space-between;
@@ -295,7 +293,6 @@ body {
     border-color: #ef4444;
 }
 
-/* Wyniki i Ranking */
 .save-score-section {
     display: flex;
     flex-direction: column;
@@ -367,62 +364,12 @@ body {
     padding: 20px;
 }
 
-.lb-details {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.lb-score-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
 .lb-pts {
     font-weight: bold;
     font-size: 0.9rem;
     color: var(--primary);
 }
 
-.lb-qcount {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-}
-
-.lb-badge {
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.lb-badge.easy {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.lb-badge.medium {
-    background: rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.lb-badge.hard {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.lb-badge.mix {
-    background: rgba(156, 163, 175, 0.15);
-    color: #9ca3af;
-    border: 1px solid rgba(156, 163, 175, 0.3);
-}
-
-/* Dolny pasek nawigacyjny */
 .bottom-nav {
     display: flex;
     justify-content: space-around;
