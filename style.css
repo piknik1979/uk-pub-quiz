@@ -23,28 +23,57 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     min-height: 100vh;
-    padding-bottom: 70px;
 }
 
-.quiz-container {
+/* Na telefonie (PWA) kontener zlewa się całkowicie z tłem, bez ramek i marginesów */
+.quiz-container, .app-container {
     width: 100%;
-    max-width: 480px;
-    background: var(--card-bg);
-    border-radius: 20px;
+    max-width: 100%;
+    min-height: 100vh;
+    background: var(--bg-color);
+    border-radius: 0;
     padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-color);
-    margin: 10px;
+    box-shadow: none;
+    border: none;
+    margin: 0;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Na większych ekranach (komputery) przywracamy eleganckie okienko w ramce */
+@media (min-width: 768px) {
+    body {
+        align-items: center;
+        padding: 20px;
+    }
+    .quiz-container, .app-container {
+        max-width: 480px;
+        min-height: auto;
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        margin: 10px;
+    }
 }
 
 .quiz-header {
@@ -71,6 +100,7 @@ body {
     display: none;
     flex-direction: column;
     gap: 12px;
+    flex: 1;
 }
 
 .screen.active {
@@ -259,7 +289,6 @@ body {
     font-size: 1rem;
 }
 
-/* Powiększone, wygodniejsze przyciski filtrów w rankingu */
 .filter-buttons {
     display: flex;
     gap: 6px;
@@ -285,7 +314,6 @@ body {
     border-color: var(--primary);
 }
 
-/* Lista wyników */
 .leaderboard-list {
     display: flex;
     flex-direction: column;
@@ -299,7 +327,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 9px 12px;
+    padding: 11px 14px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
     border: 1px solid var(--border-color);
@@ -312,7 +340,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* Styl detali w rankingu */
 .lb-details {
     display: flex;
     align-items: center;
@@ -336,7 +363,6 @@ body {
     color: var(--text-muted);
 }
 
-/* Oznaczenia poziomów (Badge) w rankingu */
 .lb-badge {
     font-size: 0.6rem;
     padding: 2px 5px;
@@ -369,14 +395,14 @@ body {
     border: 1px solid rgba(156, 163, 175, 0.3);
 }
 
-/* Dolny pasek nawigacyjny */
+/* Dolny pasek nawigacyjny - całkowicie zlicowany z tłem telefonu */
 .bottom-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: var(--card-bg);
+    background: var(--bg-color);
     border-top: 1px solid var(--border-color);
-    padding: 8px 0;
+    padding: 10px 0;
     position: fixed;
     bottom: 0;
     left: 0;
