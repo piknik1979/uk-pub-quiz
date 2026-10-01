@@ -1,8 +1,11 @@
-// Inicjalizacja klienta Supabase z pliku config.js
-const supabaseClient = window.supabase.createClient(
-  CONFIG.SUPABASE_URL,
-  CONFIG.SUPABASE_KEY
-);
+// Bezpieczna inicjalizacja klienta Supabase (zapobiega błędowi powtórnej deklaracji)
+if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    CONFIG.SUPABASE_URL,
+    CONFIG.SUPABASE_KEY
+  );
+}
+const supabaseClient = window.supabaseClient;
 
 // Stan gry
 let currentQuestions = [];
@@ -33,6 +36,10 @@ const backToStartBtn = document.getElementById('back-to-menu-btn') || document.g
 const saveScoreBtn = document.getElementById('save-score-btn');
 const themeToggle = document.getElementById('theme-toggle-btn') || document.getElementById('theme-toggle');
 
+// Dolna nawigacja
+const navHome = document.getElementById('nav-home');
+const navLeaderboard = document.getElementById('nav-leaderboard');
+
 const questionText = document.getElementById('question-text');
 const answersContainer = document.getElementById('answers-container');
 const questionCounter = document.getElementById('question-number') || document.getElementById('question-counter');
@@ -44,6 +51,7 @@ const leaderboardList = document.getElementById('leaderboard-list');
 const timerBar = document.getElementById('timer-bar') || document.getElementById('progress-bar');
 const timerText = document.getElementById('timer');
 const diffButtons = document.querySelectorAll('.diff-btn');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
 // --- MOTYW (DAY / NIGHT) ---
 const savedTheme = localStorage.getItem('pub_quiz_theme') || 'dark';
@@ -77,6 +85,17 @@ function showScreen(screen) {
   if (screen) screen.classList.add('active');
 }
 
+// Obsługa dolnego paska nawigacyjnego
+if (navHome) {
+  navHome.addEventListener('click', () => showScreen(startScreen));
+}
+if (navLeaderboard) {
+  navLeaderboard.addEventListener('click', () => {
+      loadLeaderboard('all');
+      showScreen(leaderboardScreen);
+  });
+}
+
 // --- START QUIZU (Pobieranie pytań z Supabase) ---
 if (startBtn) {
   startBtn.addEventListener('click', async () => {
@@ -84,6 +103,7 @@ if (startBtn) {
       startBtn.textContent = 'Loading questions... 🍻';
 
       try {
+          // Pobieramy z tabeli pytań (pub_quiz_questions)
           let query = supabaseClient.from(CONFIG.SUPABASE_TABLE).select('*');
           
           if (selectedDifficulty !== 'mix') {
@@ -96,7 +116,7 @@ if (startBtn) {
           if (!data || data.length === 0) {
               alert('No questions found for this difficulty in the database!');
               startBtn.disabled = false;
-              startBtn.textContent = 'Start Quiz';
+              startBtn.textContent = 'Start Quiz 🚀';
               return;
           }
 
@@ -118,7 +138,7 @@ if (startBtn) {
           alert('Failed to load questions from database.');
       } finally {
           startBtn.disabled = false;
-          startBtn.textContent = 'Start Quiz';
+          startBtn.textContent = 'Start Quiz 🚀';
       }
   });
 }
@@ -135,24 +155,49 @@ function nextQuestion() {
   updateTimerDisplay();
 
   const q = currentQuestions[currentIndex];
-  if (questionCounter) questionCounter.textContent = `${currentIndex + 1}/${currentQuestions.length}`;
+  if (questionCounter) questionCounter.textContent = `Question ${currentIndex + 1}/${currentQuestions.length}`;
   if (scoreDisplay) scoreDisplay.textContent = score;
   if (questionText) questionText.textContent = q.question;
 
-  if (answersContainer) {
-      answersContainer.innerHTML = '';
-      const options = q.options;
-      const correctIndex = q.correct_index;
-
-      options.forEach((opt, index) => {
-          const btn = document.createElement('button');
-          btn.classList.add('answer-btn');
-          btn.textContent = opt;
-          btn.addEventListener('click', () => selectAnswer(index, correctIndex));
-          answersContainer.appendChild(btn);
-      });
+  // Wyświetlanie kategorii i trudności pytania
+  const categoryTag = document.getElementById('category-tag');
+  const beerDifficulty = document.getElementById('beer-difficulty');
+  if (categoryTag) categoryTag.textContent = q.category ? `🗺️️ ${q.category}` : '🗺️ General';
+  if (beerDifficulty) {
+      const diffVal = q.difficulty ? q.difficulty.toLowerCase() : 'easy';
+      beerDifficulty.className = `beer-difficulty ${diffVal}`;
+      beerDifficulty.textContent = `🍺 ${diffVal.charAt(0).toUpperCase() + diffVal.slice(1)}`;
   }
 
+  if (answersContainer) {
+    answersContainer.innerHTML = '';
+    
+    // Zabezpieczenie: konwertuj na tablicę, jeśli dane przyszły w innej formie
+    let options = q.options;
+    if (typeof options === 'string') {
+        try {
+            options = JSON.parse(options);
+        } catch (e) {
+            console.error("Nie udało się sparsować options:", q.options);
+        }
+    }
+
+    if (!Array.isArray(options)) {
+        console.error("Pytanie nie ma poprawnej tablicy 'options':", q);
+        answersContainer.innerHTML = '<p style="color: red;">Błąd formatu odpowiedzi w tym pytaniu!</p>';
+        return;
+    }
+
+    const correctIndex = q.correct_index;
+
+    options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.classList.add('answer-btn');
+        btn.textContent = opt;
+        btn.addEventListener('click', () => selectAnswer(index, correctIndex));
+        answersContainer.appendChild(btn);
+    });
+}
   startTimer();
 }
 
@@ -227,14 +272,14 @@ function selectAnswer(selectedIndex, correctIndex) {
   }, 1200);
 }
 
-// --- KONIEC QUIZU (Usunięty durny tekst o piwie) ---
+// --- KONIEC QUIZU ---
 function endQuiz() {
   clearInterval(timer);
   showScreen(resultScreen);
   
   let bonusText = `You got ${correctAnswersCount} out of ${currentQuestions.length} correct.`;
 
-  if (finalScoreText) finalScoreText.textContent = `${score} pts`;
+  if (finalScoreText) finalScoreText.textContent = `Your Final Score: ${score}`;
   if (bonusInfoText) bonusInfoText.textContent = bonusText;
 }
 
@@ -246,36 +291,34 @@ if (saveScoreBtn) {
       saveScoreBtn.textContent = 'Saving...';
 
       try {
+          // Zapisujemy w tabeli wyników (pub_quiz_scores)
           const { error } = await supabaseClient
-              .from(CONFIG.SUPABASE_TABLE)
+              .from(CONFIG.SUPABASE_SCORES_TABLE)
               .insert([
                   {
-                      device_id: deviceId,
                       nickname: nickname,
-                      score: score,
-                      difficulty: selectedDifficulty,
-                      correct_count: correctAnswersCount
+                      score: score
                   }
               ]);
 
           if (error) throw error;
           alert('Score saved successfully!');
-          loadLeaderboard();
+          loadLeaderboard('all');
           showScreen(leaderboardScreen);
       } catch (err) {
           console.error('Error saving score:', err);
           alert('Failed to save score.');
       } finally {
           saveScoreBtn.disabled = false;
-          saveScoreBtn.textContent = 'Save Score';
+          saveScoreBtn.textContent = 'Save Score 💾';
       }
   });
 }
 
-// --- LEADERBOARD ---
+// --- LEADERBOARD I FILTRY ---
 if (leaderboardBtn) {
   leaderboardBtn.addEventListener('click', () => {
-      loadLeaderboard();
+      loadLeaderboard('all');
       showScreen(leaderboardScreen);
   });
 }
@@ -292,34 +335,44 @@ if (restartBtn) {
   });
 }
 
-async function loadLeaderboard() {
+// Obsługa przycisków filtrowania w rankingu
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      loadLeaderboard(filter);
+  });
+});
+
+async function loadLeaderboard(filter = 'all') {
   if (!leaderboardList) return;
   leaderboardList.innerHTML = '<p class="loading-text">Loading scores...</p>';
 
   try {
-      const { data, error } = await supabaseClient
-          .from(CONFIG.SUPABASE_TABLE)
+      // Pobieramy ranking z tabeli wyników (pub_quiz_scores)
+      let query = supabaseClient
+          .from(CONFIG.SUPABASE_SCORES_TABLE)
           .select('*')
           .order('score', { ascending: false })
           .limit(10);
 
+      const { data, error } = await query;
       if (error) throw error;
 
       leaderboardList.innerHTML = '';
       if (!data || data.length === 0) {
-          leaderboardList.innerHTML = '<p class="loading-text">No scores yet.</p>';
+          leaderboardList.innerHTML = '<p class="loading-text">No scores yet for this filter.</p>';
           return;
       }
 
       data.forEach((entry, index) => {
           const item = document.createElement('div');
           item.classList.add('leaderboard-item');
-          const diff = entry.difficulty ? entry.difficulty.toUpperCase() : 'MIX';
-          const correct = entry.correct_count !== undefined ? `${entry.correct_count}/10 correct` : '';
           
           item.innerHTML = `
-              <span>#${index + 1} <strong>${escapeHtml(entry.nickname)}</strong> <small>(${diff})</small></span>
-              <span><strong>${entry.score} pts</strong> <br><small style="color:var(--text-muted);">${correct}</small></span>
+              <span>#${index + 1} <strong>${escapeHtml(entry.nickname)}</strong></span>
+              <span style="text-align: right;"><strong class="lb-pts">${entry.score} pts</strong></span>
           `;
           leaderboardList.appendChild(item);
       });

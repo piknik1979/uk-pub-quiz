@@ -1,0 +1,15 @@
+id,device_id,nickname,score,difficulty,created_at,correct_count
+20,device_q84ew1a,Tom1,43,easy,2026-09-24 17:53:07.058274+00,3
+21,device_bg886by,Tom2,214,hard,2026-09-24 18:00:47.796064+00,9
+22,device_8iytvi4,Jasiek,115,mix,2026-09-24 18:48:37.984383+00,5
+23,device_8iytvi4,Kali,166,mix,2026-09-24 19:19:25.981114+00,9
+24,device_8iytvi4,Einstein,240,hard,2026-09-24 19:20:39.910109+00,10
+25,device_8iytvi4,Buddy,131,medium,2026-09-24 19:22:02.613528+00,7
+26,device_8iytvi4,Kutas Zwisas,111,easy,2026-09-24 19:23:45.234207+00,8
+27,device_8iytvi4,Kutas Zwisasek,88,easy,2026-09-24 19:24:41.213346+00,6
+28,device_8iytvi4,Zbyniu,89,easy,2026-09-24 19:25:16.971464+00,6
+29,device_8iytvi4,Zbyniu1991,25,hard,2026-09-24 19:26:22.228292+00,1
+30,device_8iytvi4,Manxaryn,25,hard,2026-09-24 19:28:54.862593+00,1
+31,device_8iytvi4,Anonymous,60,easy,2026-09-25 19:12:50.575107+00,4
+32,device_4so2gyi,Igusia,137,easy,2026-09-30 18:27:25.949059+00,10
+33,user_zoe221el1,Anonymous,0,mix,2026-10-01 11:47:35.137027+00,0
